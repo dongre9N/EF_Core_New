@@ -1,0 +1,138 @@
+﻿
+
+@model Demo_App_Data.Models.UserModel
+
+
+
+
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.3.913/styles/kendo.default-v2.min.css" />
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/2022.3.913/js/kendo.all.min.js"></script>
+
+
+
+
+<section class="vh-100 gradient-custom">
+    <div class="container py-5 h-100">
+        <div class="row justify-content-center align-items-center h-100">
+            <div class="col-12 col-lg-9 col-xl-7">
+                <div class="card shadow-2-strong card-registration" style="border-radius: 15px; background-color:antiquewhite">
+                    <div class="card-body p-4 p-md-5 media-body">
+                        <form id="form1" method="post" asp-controller="User" asp-action="Submit">
+                            <h3 class="text-center ">User Registration Form</h3>
+                            <input id="Id" hidden="hidden" asp-for="Id"/>
+                            <input id="createDate" hidden="hidden" asp-for="CreatedDate"/>
+                            <input id="CreatedBy" hidden="hidden" asp-for="CreatedBy"/>
+                            <br />
+                            @*Name section*@
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-outline">
+                                        <label>Name:</label>
+                                        <input id="ktxtName" class="form-control"  asp-for="Name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            @*  Email section*@
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-outline">
+                                        <label>Email :</label>
+                                        <input id="ktxtEmail" class="form-control" asp-for="Email"/>
+                                    </div>
+                                </div>
+                            </div>
+                            @*Father name and mother name Section*@
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-outline">
+                                        <label>Password : </label>
+                                        <input id="ktxtPasword" class="form-control" asp-for="Password"/>
+                                    </div>
+                                </div>
+                            </div>
+                            @*Contact and Photo section section*@
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-outline">
+                                        <label>Mobile No. :</label>
+                                        <input id="ktxtContact" class="form-control" asp-for="Mobile"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-outline">
+                                        <label>Profile Photo : </label>
+                                        <input id="ktxtPhoto" class="form-control" type="file" asp-for="PhotoId"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            @*Button section*@
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4 ">
+                                    <div class="form-outline">
+                                        <button type="reset" class="btn btn-danger btn-lg btn-block cancle" onclick="$(this).closest('form')[0].submit()">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<script>
+    /* var data = new Array();*/
+
+
+    $("#ktxtName").kendoTextBox({
+        placeholder: "Enter your name"
+    });
+
+    $("#ktxtEmail").kendoTextBox({
+        placeholder: "Enter your Email"
+    });
+
+    $("#ktxtPasword").kendoTextBox({
+        placeholder: "Enter your password"
+    });
+
+
+    $("#ktxtContact").kendoTextBox({
+        placeholder: "Contact"
+    });
+
+    $("#ktxtPhoto").kendoUpload({
+        async: {
+            chunkSize: 11000,// bytes
+            saveUrl: "chunksave",
+            removeUrl: "remove",
+            autoUpload: false
+        }
+    }).data("kendoUpload");
+
+
+    //debugger;
+    //var data = new kendo.data.DataSource({
+    //    transport: {
+    //        read: {
+    //            url: "/UserRegistration/GetMycity",
+    //            dataType: "json"
+    //        }
+    //    }
+    //});
+
+</script>

@@ -1,0 +1,287 @@
+﻿
+@model Demo_App_Data.Models.UserModel
+    <!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Latest compiled JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.3.913/styles/kendo.default-v2.min.css" />
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/2022.3.913/js/kendo.all.min.js"></script>
+
+
+<script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-grid.css" />
+
+<link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-theme-alpine.css" />
+
+
+
+
+<h2>AG GRID</h2>
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Crete New
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="form1" method="post" asp-controller="User" asp-action="Submit" >     @*onajaxsuccess="submitSuccess"*@
+            <div class="modal-content">
+                <!--Model Header-->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">User Registraion Form</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!--Model Body-->
+                <div class="modal-body">
+
+                    <input id="txtId" hidden="hidden" asp-for="Id" />
+
+                    @*<input id="createDate" hidden="hidden" asp-for="CreatedDate" />
+                        <input id="CreatedBy" hidden="hidden" asp-for="CreatedBy" />*@
+                    <br />
+                    @*Name section*@
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-outline">
+                                <label>Name:</label>
+                                <input id="ktxtName" class="form-control" asp-for="Name" />
+                            </div>
+                        </div>
+                    </div>
+                    @*  Email section*@
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-outline">
+                                <label>Email :</label>
+                                <input id="ktxtEmail" class="form-control" asp-for="Email" />
+                            </div>
+                        </div>
+                    </div>
+                    @*Father name and mother name Section*@
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-outline">
+                                <label>Password : </label>
+                                <input id="ktxtPasword" class="form-control" asp-for="Password" />
+                            </div>
+                        </div>
+                    </div>
+                    @*Contact and Photo section section*@
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-outline">
+                                <label>Mobile No. :</label>
+                                <input id="ktxtContact" class="form-control" asp-for="Mobile" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-outline">
+                                <label>Profile Photo : </label>
+                                <input id="ktxtPhoto" class="form-control" type="file" asp-for="PhotoId" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+                <!--Model Footer-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" >Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<br />
+<br />
+<div id="myGrid" class="ag-theme-alpine" style="height:400px"></div>
+<br />
+
+
+<script type="text/javascript">
+
+
+
+    //function submitSuccess() {
+    //    $.ajax({
+    //        type: 'GET',
+    //        url: "GetUserList/",
+    //        success: function (response) {
+    //            debugger;
+    //            console.log(response);
+    //            alert(response.msg);
+
+    //            document.getElementById("myGrid").innerHTML = null;
+
+
+    //            const gridDiv = document.querySelector('#myGrid');
+    //            new agGrid.Grid(gridDiv, gridOptions);
+    //            debugger;
+    //            fetch("/User/GetMyUser")
+    //                .then(response => response.json())
+    //                .then(data => {
+    //                    // load fetched data into grid
+    //                    gridOptions.api.setRowData(data);
+    //                    //console.log("rowData:" + data);
+    //                });
+    //        }
+    //    });
+
+    //}
+
+
+    function edit(id) {
+
+        // alert("hello");
+        debugger;
+
+        $.ajax({
+            type: 'GET',
+            url: "GetMyUserById/" + id,
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                console.log(response);
+
+                var editModel = $("#exampleModal");
+                editModel.modal('show');
+                document.getElementById('txtId').value = response[0].id;
+                document.getElementById('ktxtName').value = response[0].name;
+                document.getElementById('ktxtEmail').value = response[0].email;
+                document.getElementById('ktxtPasword').value = response[0].password;
+                document.getElementById('ktxtContact').value = response[0].mobile;
+                document.getElementById('ktxtPhoto').value = response[0].photoId.toSting();
+            }
+        });
+
+    }
+
+
+    function deleteRow(id) {
+       
+        $.ajax({
+            type: 'POST',
+            url: "DeleteUser/" + id,
+            success: function (response) {
+                debugger;
+               // console.log(response);
+                alert(response.msg);
+
+                document.getElementById("myGrid").innerHTML = null;
+
+               
+                    const gridDiv = document.querySelector('#myGrid');
+                    new agGrid.Grid(gridDiv, gridOptions);
+                debugger;
+                fetch("/User/GetMyUser")
+                    .then(response => response.json())
+                    .then(data => {
+                        // load fetched data into grid
+                        gridOptions.api.setRowData(data);
+                        //console.log("rowData:" + data);
+                    });
+            }
+        });
+
+    }
+
+
+
+
+
+
+    const columnDefs = [
+        { field: "id", hide: "true" },
+        { field: "name" },
+        { field: "email" },
+        { field: "password" },
+        { field: "mobile" },
+        { field: "createdDate" },
+        { field: "createdBy" },
+        { field: "lastUpdatedDate" },
+        {
+            headerName: "Action",
+            field: "id",
+            cellRenderer: params => {
+                return "<button type='button' id='btnEdit' onclick='edit(" + params.data.id + ")' class='btn btn-primary'  data-bs-target='#exampleModal' data-idValue='" + params.data.id + "'>Edit</button>" +
+                    "<button id='btnDelete' class='btn btn-outline-danger' onclick='deleteRow(" + params.data.id + ")'>Delete</button> ";
+            }
+        }
+    ];
+
+
+    // let the grid know which columns and what data to use
+    const gridOptions = {
+        columnDefs: columnDefs,
+
+        defaultColDef: {
+            sortable: true,
+            filter: true,
+            resizable: true
+        }
+    };
+
+    // setup the grid after the page has finished loading
+    document.addEventListener('DOMContentLoaded', () => {
+        const gridDiv = document.querySelector('#myGrid');
+        new agGrid.Grid(gridDiv, gridOptions);
+    });
+
+    debugger;
+    fetch("/User/GetMyUser")
+        .then(response => response.json())
+        .then(data => {
+            // load fetched data into grid
+            gridOptions.api.setRowData(data);
+            //console.log("rowData:" + data);
+        });
+
+
+
+
+
+    //// user registraion form script/////
+
+
+
+
+    $("#ktxtName").kendoTextBox({
+        placeholder: "Enter your name"
+    });
+
+    $("#ktxtEmail").kendoTextBox({
+        placeholder: "Enter your Email"
+    });
+
+    $("#ktxtPasword").kendoTextBox({
+        placeholder: "Enter your password"
+    });
+
+
+    $("#ktxtContact").kendoTextBox({
+        placeholder: "Contact"
+    });
+
+    $("#ktxtPhoto").kendoUpload({
+        async: {
+            chunkSize: 11000,// bytes
+            saveUrl: "chunksave",
+            removeUrl: "remove",
+            autoUpload: false
+        }
+    }).data("kendoUpload");
+
+
+</script>
+
